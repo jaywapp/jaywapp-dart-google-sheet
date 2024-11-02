@@ -13,12 +13,18 @@ class GoogleSheetManager {
     sheetID = googleSheetID;
   }
 
-  Future<List<List<Object?>>?> GetActiveValues(String sheetName) async {
-    if (account == null) return List.empty();
-
+  Future<sheets.SheetsApi> GetApi() async {
     final headers = await account?.authHeaders ?? new Map<String, String>();
     final authenticatedClient = GoogleHttpClient(headers);
     final sheetsApi = sheets.SheetsApi(authenticatedClient);
+
+    return sheetsApi;
+  }
+
+  Future<List<List<Object?>>?> GetActiveValues(String sheetName) async {
+    if (account == null) return List.empty();
+
+    final sheetsApi = await GetApi();
 
     try {
       var sheets = sheetsApi.spreadsheets;
@@ -60,9 +66,10 @@ class GoogleSheetManager {
   }
 
   Future<void> Update(String sheetName, int index, List<Object?> row) async {
-    final headers = await account?.authHeaders ?? new Map<String, String>();
-    final authenticatedClient = GoogleHttpClient(headers);
-    final sheetsApi = sheets.SheetsApi(authenticatedClient);
+    if (account == null) return;
+
+    final sheetsApi = await GetApi();
+
     try {
       final spreadsheet = await sheetsApi.spreadsheets.get(sheetID);
       final sheet = spreadsheet.sheets!
