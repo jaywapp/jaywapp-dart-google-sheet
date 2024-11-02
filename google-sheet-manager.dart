@@ -12,13 +12,14 @@ class GoogleSheetManager {
   GoogleSignInAccount? account;
   String sheetID = '';
 
-  GoogleSheetManager(GoogleSignInAccount? account, String sheetID) {
-    account = account;
-    sheetID = sheetID;
+  GoogleSheetManager(GoogleSignInAccount? googleAccount, String googleSheetID) {
+    account = googleAccount;
+    sheetID = googleSheetID;
   }
 
   Future<List<List<Object?>>?> GetActiveValues(String sheetName) async {
-    if (account == null) return List.empty();
+    if (account == null) 
+     return List.empty();
 
     final headers = await account?.authHeaders ?? new Map<String, String>();
     final authenticatedClient = GoogleHttpClient(headers);
@@ -35,8 +36,9 @@ class GoogleSheetManager {
       final int colCount = sheet.properties!.gridProperties!.columnCount!;
 
       final range = GoogleSheetRange.Create(sheetName, 1, 1, colCount, rowCount);
+      final rangeStr = range.toString();
 
-      var response = await sheets.values.get(sheetID, range.toString());
+      var response = await sheets.values.get(sheetID, rangeStr);
       var values = response.values;
 
       return values;

@@ -9,19 +9,19 @@ class GoogleSheetRange {
     String sheetName, 
     String startCol, int startRow,
     String endCol, int endRow) {
-    sheetName = sheetName;
-    startCol = startCol;
-    startRow = startRow;
-    endCol = endCol;
-    endRow = endRow;
+    this.sheetName = sheetName;
+    this.startCol = startCol;
+    this.startRow = startRow;
+    this.endCol = endCol;
+    this.endRow = endRow;
   }
 
   GoogleSheetRange.Create(String sheetName, int startColIdx, int startRow, int endColIdx, int endRow){
-    sheetName = sheetName;
-    startCol = GetColumnLetter(startColIdx);
-    startRow = startRow;
-    endCol = GetColumnLetter(endColIdx);
-    endRow = endRow;
+    this.sheetName = sheetName;
+    this.startCol = GetColumnLetter(startColIdx);
+    this.startRow = startRow;
+    this.endCol = GetColumnLetter(endColIdx);
+    this.endRow = endRow;
   }
 
   @override
@@ -31,7 +31,7 @@ class GoogleSheetRange {
 
   static String GetColumnLetter(int index) {
     String columnLetter = '';
-    int tempIndex = index + 1; // Google Sheets 열 번호는 1부터 시작
+    int tempIndex = index; // Google Sheets 열 번호는 1부터 시작
 
     while (tempIndex > 0) {
       tempIndex -= 1;
