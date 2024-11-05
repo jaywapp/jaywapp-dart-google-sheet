@@ -126,4 +126,38 @@ class GoogleSheetManager {
 
     return -1;
   }
+
+   Future<int> GetLastIndex(String sheetName) async {
+    var values = await GetActiveValues(sheetName) ?? List.empty();
+    return values.length + 1;
+  }
+
+  Future<void> Appand(String sheetName, List<Object?> row) async{
+    
+    if (account == null) return;
+    
+    final sheetsApi = await GetApi();
+    var index = await GetLastIndex(sheetName);
+
+    try {
+      final spreadsheet = await sheetsApi.spreadsheets.get(sheetID);
+      final sheet = spreadsheet.sheets!
+          .firstWhere((sheet) => sheet.properties!.title == sheetName);
+      final int colCount = sheet.properties!.gridProperties!.columnCount!;
+
+      var range = GoogleSheetRange.Create(sheetName, 1, index, colCount, index)
+          .toString();
+
+      List<List<Object?>> values = [];
+      values.add(row);
+
+      var valueRange = sheets.ValueRange(
+        range: range,
+        values: values,
+      );
+      await sheetsApi.spreadsheets.values
+          .update(valueRange, sheetID, range, valueInputOption: 'RAW');
+    } catch (e) {}
+
+  }
 }
